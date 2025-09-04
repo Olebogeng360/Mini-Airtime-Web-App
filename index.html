@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Airtime Advance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    #result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Airtime Advance</h2>
+    <input id="number" placeholder="Enter phone number (10 digits)" />
+    <input id="amount" type="number" placeholder="Enter amount (max 50)" />
+    <button onclick="requestAdvance()">Request Advance</button>
+    <button onclick="checkBalance()">Check Balance</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:8080/api";
+
+    function requestAdvance() {
+      const number = document.getElementById("number").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+
+      fetch(`${API_URL}/advance`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ number, amount })
+      })
+      .then(res => res.text())
+      .then(msg => document.getElementById("result").innerText = msg)
+      .catch(err => console.error(err));
+    }
+
+    function checkBalance() {
+      const number = document.getElementById("number").value;
+      fetch(`${API_URL}/balance/${number}`)
+        .then(res => res.text())
+        .then(msg => document.getElementById("result").innerText = msg)
+        .catch(err => console.error(err));
+    }
+  </script>
+</body>
+</html>
